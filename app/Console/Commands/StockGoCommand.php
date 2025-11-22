@@ -32,7 +32,7 @@ class StockGoCommand extends Command
         $stockHttpClient = StockHttpClient::make();
         $now = Carbon::now()->format('Y-m-d');
         $queryParams = [
-            'dateFrom' => '2025-11-22',
+            'dateFrom' => '2000-11-22',
             'dateTo' => $now,
             'limit' => 500,
         ];
