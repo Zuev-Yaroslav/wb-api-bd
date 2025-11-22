@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\HttpClients\OrderHttpClient;
+use App\Models\Income;
 use App\Models\Order;
 use Illuminate\Console\Command;
 
@@ -31,13 +32,18 @@ class OrderGoCommand extends Command
         $queryParams = [
             'dateFrom' => '2000-11-22',
             'dateTo' => '2025-11-22',
-            'limit' => 3000,
+            'limit' => 500,
             'page' => 1,
         ];
         $data = $orderHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
-        $orders = collect($data['data']);
-        $orders->each(function ($order) {
-            Order::firstOrCreate($order);
-        });
+
+        if (isset($data['data'])) {
+            $orders = collect($data['data']);
+            $orders->each(function ($order) {
+                Order::firstOrCreate($order);
+            });
+            return;
+        }
+        dump('Нет данных');
     }
 }

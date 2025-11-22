@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\HttpClients\StockHttpClient;
+use App\Models\Sale;
 use App\Models\Stock;
 use Illuminate\Console\Command;
 
@@ -31,13 +32,16 @@ class StockGoCommand extends Command
         $queryParams = [
             'dateFrom' => '2025-11-22',
             'dateTo' => '2025-11-22',
-            'limit' => 3000,
+            'limit' => 500,
         ];
         $data = $stockHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
-//        dd($data['data']);
-        $stocks = collect($data['data']);
-        $stocks->each(function ($stock) {
-            Stock::firstOrCreate($stock);
-        });
+        if (isset($data['data'])) {
+            $stocks = collect($data['data']);
+            $stocks->each(function ($stock) {
+                Stock::firstOrCreate($stock);
+            });
+            return;
+        }
+        dump('Нет данных');
     }
 }
