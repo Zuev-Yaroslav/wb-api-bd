@@ -29,9 +29,9 @@ class StockGoCommand extends Command
     {
         $stockHttpClient = StockHttpClient::make();
         $queryParams = [
-            'dateFrom' => '2025-11-21',
-            'dateTo' => '2025-11-21',
-            'limit' => 10,
+            'dateFrom' => '2025-11-22',
+            'dateTo' => '2025-11-22',
+            'limit' => 3000,
         ];
         $data = $stockHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
 //        dd($data['data']);

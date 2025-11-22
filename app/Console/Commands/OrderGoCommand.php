@@ -31,8 +31,8 @@ class OrderGoCommand extends Command
         $queryParams = [
             'dateFrom' => '2000-11-22',
             'dateTo' => '2025-11-22',
-            'limit' => 10,
-            'page' => 2,
+            'limit' => 3000,
+            'page' => 1,
         ];
         $data = $orderHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
         $orders = collect($data['data']);

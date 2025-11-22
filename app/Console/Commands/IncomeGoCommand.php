@@ -31,7 +31,7 @@ class IncomeGoCommand extends Command
         $queryParams = [
             'dateFrom' => '2000-11-21',
             'dateTo' => '2025-11-21',
-            'limit' => 10,
+            'limit' => 3000,
         ];
         $data = $incomeHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
         $incomes = collect($data['data']);

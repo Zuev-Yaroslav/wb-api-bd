@@ -29,9 +29,9 @@ class SaleGoCommand extends Command
     {
         $saleHttpClient = SaleHttpClient::make();
         $queryParams = [
-            'dateFrom' => '2020-11-22',
+            'dateFrom' => '2000-11-22',
             'dateTo' => '2025-11-22',
-            'limit' => 10,
+            'limit' => 3000,
         ];
         $data = $saleHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
 //        dd($data['data']);
