@@ -18,3 +18,17 @@ php artisan migrate
 ```` bash
 php artisan go
 ````
+
+ДОСТУП К БД: https://isp8.eurobyte.ru/vh6357361/phpmyadmin
+````
+DB_DATABASE=vh6357361_wb_api
+DB_USERNAME=vh6357361_tester
+DB_PASSWORD=zJ9tA3zN1l
+````
+
+ТАБЛИЦЫ
+
+- incomes - доходы
+- orders - заказы
+- sales - продажи
+- stockы - склады
