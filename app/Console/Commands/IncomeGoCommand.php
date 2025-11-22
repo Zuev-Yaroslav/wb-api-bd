@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\HttpClients\IncomeHttpClient;
 use App\Models\Income;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class IncomeGoCommand extends Command
 {
@@ -27,10 +28,11 @@ class IncomeGoCommand extends Command
      */
     public function handle()
     {
+        $now = Carbon::now()->format('Y-m-d');
         $incomeHttpClient = IncomeHttpClient::make();
         $queryParams = [
-            'dateFrom' => '2000-11-21',
-            'dateTo' => '2025-11-21',
+            'dateFrom' => $now,
+            'dateTo' => $now,
             'limit' => 500,
         ];
         $data = $incomeHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);

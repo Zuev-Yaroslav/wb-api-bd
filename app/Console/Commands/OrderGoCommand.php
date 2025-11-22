@@ -6,6 +6,7 @@ use App\HttpClients\OrderHttpClient;
 use App\Models\Income;
 use App\Models\Order;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class OrderGoCommand extends Command
 {
@@ -29,9 +30,11 @@ class OrderGoCommand extends Command
     public function handle()
     {
         $orderHttpClient = OrderHttpClient::make();
+        $now = Carbon::now()->format('Y-m-d');
+
         $queryParams = [
             'dateFrom' => '2000-11-22',
-            'dateTo' => '2025-11-22',
+            'dateTo' => $now,
             'limit' => 500,
             'page' => 1,
         ];

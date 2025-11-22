@@ -6,6 +6,7 @@ use App\HttpClients\StockHttpClient;
 use App\Models\Sale;
 use App\Models\Stock;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class StockGoCommand extends Command
 {
@@ -29,9 +30,10 @@ class StockGoCommand extends Command
     public function handle()
     {
         $stockHttpClient = StockHttpClient::make();
+        $now = Carbon::now()->format('Y-m-d');
         $queryParams = [
             'dateFrom' => '2025-11-22',
-            'dateTo' => '2025-11-22',
+            'dateTo' => $now,
             'limit' => 500,
         ];
         $data = $stockHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
