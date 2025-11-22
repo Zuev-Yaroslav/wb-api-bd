@@ -31,7 +31,7 @@ class IncomeGoCommand extends Command
         $now = Carbon::now()->format('Y-m-d');
         $incomeHttpClient = IncomeHttpClient::make();
         $queryParams = [
-            'dateFrom' => $now,
+            'dateFrom' => '2000-01-01',
             'dateTo' => $now,
             'limit' => 500,
         ];
