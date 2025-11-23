@@ -33,7 +33,7 @@ class StockGoCommand extends Command
         $stockHttpClient->auth(config('wbapi.auth_key'));
         for ($i = 1; true; $i++) {
             $queryParams = [
-                'dateFrom' => '2000-01-01',
+                'dateFrom' => $now,
                 'dateTo' => $now,
                 'limit' => 500,
                 'page' => $i,
