@@ -29,22 +29,32 @@ class SaleGoCommand extends Command
      */
     public function handle()
     {
-        $saleHttpClient = SaleHttpClient::make();
         $now = Carbon::now()->format('Y-m-d');
-        $queryParams = [
-            'dateFrom' => '2000-11-22',
-            'dateTo' => $now,
-            'limit' => 500,
-        ];
-        $data = $saleHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
+        $saleHttpClient = SaleHttpClient::make();
+        $saleHttpClient->auth(config('wbapi.auth_key'));
+        for ($i = 1; true; $i++) {
+            $queryParams = [
+                'dateFrom' => '2000-01-01',
+                'dateTo' => $now,
+                'limit' => 500,
+                'page' => $i,
+            ];
 
-        if (isset($data['data'])) {
-            $sales = collect($data['data']);
-            $sales->each(function ($sale) {
-                Sale::firstOrCreate($sale);
-            });
-            return;
+            $data = $saleHttpClient->index($queryParams);
+            sleep(2);
+            if (isset($data['data'])) {
+                $sales = collect($data['data']);
+                if ($sales->isEmpty()) {
+                    break;
+                }
+                $sales->each(function ($sale) {
+                    Sale::create($sale);
+                });
+                dump($i);
+            } else {
+                dump('Нет данных');
+                break;
+            }
         }
-        dump('Нет данных');
     }
 }

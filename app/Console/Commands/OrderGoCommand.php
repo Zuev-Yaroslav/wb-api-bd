@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\HttpClients\OrderHttpClient;
-use App\Models\Income;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -29,24 +28,32 @@ class OrderGoCommand extends Command
      */
     public function handle()
     {
-        $orderHttpClient = OrderHttpClient::make();
         $now = Carbon::now()->format('Y-m-d');
+        $orderHttpClient = OrderHttpClient::make();
+        $orderHttpClient->auth(config('wbapi.auth_key'));
+        for ($i = 1; true; $i++) {
+            $queryParams = [
+                'dateFrom' => '2000-01-01',
+                'dateTo' => $now,
+                'limit' => 500,
+                'page' => $i,
+            ];
 
-        $queryParams = [
-            'dateFrom' => '2000-11-22',
-            'dateTo' => $now,
-            'limit' => 500,
-            'page' => 1,
-        ];
-        $data = $orderHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
-
-        if (isset($data['data'])) {
-            $orders = collect($data['data']);
-            $orders->each(function ($order) {
-                Order::firstOrCreate($order);
-            });
-            return;
+            $data = $orderHttpClient->index($queryParams);
+            sleep(2);
+            if (isset($data['data'])) {
+                $orders = collect($data['data']);
+                if ($orders->isEmpty()) {
+                    break;
+                }
+                $orders->each(function ($order) {
+                    Order::create($order);
+                });
+                dump($i);
+            } else {
+                dump('Нет данных');
+                break;
+            }
         }
-        dump('Нет данных');
     }
 }

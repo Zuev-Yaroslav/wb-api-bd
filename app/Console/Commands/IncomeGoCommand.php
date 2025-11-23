@@ -30,19 +30,32 @@ class IncomeGoCommand extends Command
     {
         $now = Carbon::now()->format('Y-m-d');
         $incomeHttpClient = IncomeHttpClient::make();
-        $queryParams = [
-            'dateFrom' => '2000-01-01',
-            'dateTo' => $now,
-            'limit' => 500,
-        ];
-        $data = $incomeHttpClient->auth(config('wbapi.auth_key'))->index($queryParams);
-        if (isset($data['data'])) {
-            $incomes = collect($data['data']);
-            $incomes->each(function ($income) {
-                Income::firstOrCreate($income);
-            });
-            return;
+        $incomeHttpClient->auth(config('wbapi.auth_key'));
+
+        for ($i = 1; true; $i++) {
+            $queryParams = [
+                'dateFrom' => '2000-01-01',
+                'dateTo' => $now,
+                'limit' => 500,
+                'page' => $i,
+            ];
+
+            $data = $incomeHttpClient->index($queryParams);
+            sleep(2);
+            if (isset($data['data'])) {
+                $incomes = collect($data['data']);
+                if ($incomes->isEmpty()) {
+                    break;
+                }
+                $incomes->each(function ($income) {
+                    Income::create($income);
+                });
+                dump($i);
+            } else {
+                dump('Нет данных');
+                break;
+            }
         }
-        dump('Нет данных');
+
     }
 }
