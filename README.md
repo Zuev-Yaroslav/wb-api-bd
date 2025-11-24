@@ -31,4 +31,4 @@ DB_PASSWORD=zJ9tA3zN1l
 - incomes - доходы
 - orders - заказы
 - sales - продажи
-- stockы - склады
+- stocks - склады
