@@ -11,8 +11,6 @@ class OrderHttpClient extends  HttpClient
 
     public function index(array $queryParams) : Collection
     {
-        $data = $this->http->get(self::ENDPOINT_INDEX, $queryParams)->collect();
-
-        return $data;
+        return $this->http->get(self::ENDPOINT_INDEX, $queryParams)->collect();
     }
 }

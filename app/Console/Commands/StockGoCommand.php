@@ -31,29 +31,12 @@ class StockGoCommand extends Command
         $now = Carbon::now()->format('Y-m-d');
         $stockHttpClient = StockHttpClient::make();
         $stockHttpClient->auth(config('wbapi.auth_key'));
-        for ($i = 1; true; $i++) {
-            $queryParams = [
-                'dateFrom' => $now,
-                'dateTo' => $now,
-                'limit' => 500,
-                'page' => $i,
-            ];
+        $queryParams = [
+            'dateFrom' => $now,
+            'dateTo' => $now,
+            'limit' => 500,
+        ];
 
-            $data = $stockHttpClient->index($queryParams);
-            sleep(2);
-            if (isset($data['data'])) {
-                $stocks = collect($data['data']);
-                if ($stocks->isEmpty()) {
-                    break;
-                }
-                $stocks->each(function ($stock) {
-                    Stock::create($stock);
-                });
-                dump($i);
-            } else {
-                dump('Нет данных');
-                break;
-            }
-        }
+        $stockHttpClient->saveToDb($queryParams, Stock::class);
     }
 }

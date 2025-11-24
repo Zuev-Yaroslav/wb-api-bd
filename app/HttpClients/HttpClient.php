@@ -2,6 +2,7 @@
 
 namespace App\HttpClients;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -32,5 +33,28 @@ abstract class HttpClient
     public function __construct()
     {
         $this->http = Http::wbapi();
+    }
+
+    public function saveToDb(array $queryParams, string $model)
+    {
+        for ($i = 1; true; $i++) {
+            $queryParams['page'] = $i;
+            $data = $this->index($queryParams);
+            sleep(2);
+            if (isset($data['data'])) {
+                $items = collect($data['data']);
+                if ($items->isEmpty()) {
+                    break;
+                }
+                $items->each(function ($item) use ($model) {
+                    $model::create($item);
+                });
+                dump($model . ' ' . $i);
+            } else {
+                dump('Нет данных');
+                break;
+            }
+        }
+
     }
 }
